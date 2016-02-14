@@ -1,0 +1,20 @@
+{
+    "name": "rairlie/laravel-locking-session",
+    "description": "Support session locking in Laravel",
+    "keywords": ["Laravel", "session"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Richard Airlie",
+            "email": "richard@backtrace.co.uk"
+        }
+    ],
+    "autoload": {
+        "psr-0": {
+            "Rairlie\\LockingSession": "src/"
+        }
+    },
+    "require": {
+        "illuminate/session": "~5.0"
+    }
+}
