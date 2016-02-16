@@ -92,6 +92,11 @@ class LockingSessionHandler implements SessionHandlerInterface
 
     public function needsRequest()
     {
+        return $this->usingCookieSessions();
+    }
+
+    public function usingCookieSessions()
+    {
         return $this->handler instanceof CookieSessionHandler;
     }
 
