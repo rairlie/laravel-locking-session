@@ -2,6 +2,7 @@
 namespace Rairlie\LockingSession\Middleware;
 
 use Illuminate\Session\Middleware\StartSession as BaseStartSession;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
 
 class StartSession extends BaseStartSession
 {
@@ -16,7 +17,13 @@ class StartSession extends BaseStartSession
             return false;
         }
 
-        return $this->manager->driver()->getHandler()->usingCookieSessions();
+        $handler = $this->manager->driver()->getHandler();
+
+        if ($handler instanceOf NullSessionHandler) {
+            return false;
+        }
+
+        return $handler->usingCookieSessions();
     }
 
 }
