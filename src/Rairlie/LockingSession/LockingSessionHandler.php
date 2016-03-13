@@ -3,91 +3,55 @@ namespace Rairlie\LockingSession;
 
 use SessionHandlerInterface;
 use Illuminate\Session\CookieSessionHandler;
-use Symfony\Component\Finder\Finder;
+use Rairlie\LockingSession\Lock;
 
 class LockingSessionHandler implements SessionHandlerInterface
 {
 
-    const LOCKDIR_NAME = 'sessionlocks';
+    protected $realHandler;
+    protected $lock;
 
-    protected $lockPath;
-
-    protected $lockFP;
-
-    public function __construct(SessionHandlerInterface $handler)
+    public function __construct(SessionHandlerInterface $realHandler)
     {
-        $this->handler = $handler;
-
-        $this->lockPath = sys_get_temp_dir() . '/' . self::LOCKDIR_NAME . '/';
-        if (!is_dir($this->lockPath)) {
-            mkdir($this->lockPath, 0744, true);
-        }
+        $this->realHandler = $realHandler;
     }
 
     public function close()
     {
-        $this->unlockSession();
-        return $this->handler->close();
+        return $this->realHandler->close();
     }
 
     public function destroy($session_id)
     {
-        return $this->handler->destroy($session_id);
+        return $this->realHandler->destroy($session_id);
     }
 
     public function gc($maxlifetime)
     {
-        $this->gcLockfiles($maxlifetime);
-        return $this->handler->gc($maxlifetime);
+        $dummy = new Lock('dummy');
+        $dummy->gcLockDir($maxlifetime);
+
+        return $this->realHandler->gc($maxlifetime);
     }
 
     public function open($save_path, $name)
     {
-        return $this->handler->open($save_path, $name);
+        return $this->realHandler->open($save_path, $name);
     }
 
     public function read($session_id)
     {
-        $this->lockSession($session_id);
-        return $this->handler->read($session_id);
+        // Lock the session before reading and hold the lock
+        $this->acquireLock($session_id);
+        return $this->realHandler->read($session_id);
     }
 
     public function write($session_id, $session_data)
     {
-        $this->lockSession($session_id);
-        $result = $this->handler->write($session_id, $session_data);
-        $this->unlockSession($session_id);
+        $this->acquireLock($session_id);
+        $result = $this->realHandler->write($session_id, $session_data);
+        $this->releaseLock();
         return $result;
-    }
-
-    protected function lockSession($session_id)
-    {
-        if ($this->lockFP) {
-            return;
-        }
-
-        $this->lockFP = fopen($this->lockPath . $session_id, 'w+');
-        flock($this->lockFP, LOCK_EX);
-    }
-
-    protected function unlockSession($session_id)
-    {
-        $result = flock($this->lockFP, LOCK_UN);
-        fclose($this->lockFP);
-        $this->lockFP = null;
-    }
-
-    protected function gcLockfiles($maxlifetime)
-    {
-        $files = Finder::create()
-                    ->in($this->lockPath)
-                    ->files()
-                    ->ignoreDotFiles(true)
-                    ->date('<= now - '.$maxlifetime.' seconds');
-
-        foreach ($files as $file) {
-            unlink($file->getRealPath());
-        }
     }
 
     public function needsRequest()
@@ -97,15 +61,29 @@ class LockingSessionHandler implements SessionHandlerInterface
 
     public function usingCookieSessions()
     {
-        return $this->handler instanceof CookieSessionHandler;
+        return $this->realHandler instanceof CookieSessionHandler;
     }
 
     /**
-     * Route any other methods through to the real session handler (e.g. setRequest)
+     * Route any other methods through to the real session realHandler (e.g. setRequest)
      */
     public function __call($name, $arguments)
     {
-        return call_user_func_array([$this->handler, $name], $arguments);
+        return call_user_func_array([$this->realHandler, $name], $arguments);
+    }
+
+    protected function acquireLock($id)
+    {
+        if (!$this->lock) {
+            $this->lock = new Lock($id);
+        }
+        $this->lock->acquire();
+    }
+
+    protected function releaseLock()
+    {
+        $this->lock->release();
+        $this->lock = null;
     }
 
 }

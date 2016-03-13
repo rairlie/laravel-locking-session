@@ -6,9 +6,9 @@ use Illuminate\Session\Store as BaseStore;
 class Store extends BaseStore
 {
 
-    public function __construct($name, $actualHandler, $id = null)
+    public function __construct($name, $realHandler, $id = null)
     {
-        $lockingSessionHandler = new LockingSessionHandler($actualHandler);
+        $lockingSessionHandler = new LockingSessionHandler($realHandler);
 
         return parent::__construct($name, $lockingSessionHandler, $id);
     }
