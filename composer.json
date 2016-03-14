@@ -1,6 +1,6 @@
 {
     "name": "rairlie/laravel-locking-session",
-    "description": "Support session locking in Laravel",
+    "description": "Provide session locking in Laravel",
     "keywords": ["Laravel", "session"],
     "license": "MIT",
     "authors": [
@@ -15,6 +15,7 @@
         }
     },
     "require": {
+        "php": ">=5.5.9",
         "illuminate/session": "~5.0"
     }
 }
