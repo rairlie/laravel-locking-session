@@ -32,7 +32,7 @@ With session locking in place, this becomes:
 
 Final result: COUNTER = 3
 
-Session locking ensures correctness at the costs of effectively serialising concurrent requests accessing the session. If you have some concurrent requests that don't use the session, disabling session middleware one those requests allows them to still be concurrent.
+Session locking ensures correctness at the cost of effectively serialising concurrent requests accessing the session. If you have some concurrent requests that don't use the session, disabling session middleware on those requests allows them to still be concurrent.
 
 ## Installation
     composer require rairlie/laravel-locking-session
