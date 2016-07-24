@@ -5,7 +5,7 @@ This package implements session locking in Laravel by wrapping an exclusive lock
 It addresses the problem where session data is lost due to concurrent requests updating the session at the same time. One instance where this may happen is when making simultaneous XHR requests.
 
 ##### Example scenario:
-Consider the case were a variable COUNTER is a value stored in the session, and two requests attempt to increment it at the same time. Without session locking:
+Consider the case where a variable COUNTER is a value stored in the session, and two requests attempt to increment it at the same time. Without session locking:
 
     Request A: Read session data: COUNTER = 1
     Request B: Read session data: COUNTER = 1
