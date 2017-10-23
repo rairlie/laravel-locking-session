@@ -3,9 +3,10 @@ namespace Rairlie\LockingSession;
 
 use SessionHandlerInterface;
 use Illuminate\Session\CookieSessionHandler;
+use Illuminate\Session\ExistenceAwareInterface;
 use Rairlie\LockingSession\Lock;
 
-class LockingSessionHandler implements SessionHandlerInterface
+class LockingSessionHandler implements SessionHandlerInterface, ExistenceAwareInterface
 {
 
     protected $realHandler;
@@ -84,6 +85,21 @@ class LockingSessionHandler implements SessionHandlerInterface
     {
         $this->lock->release();
         $this->lock = null;
+    }
+
+    /**
+     * Set the existence of the session on the handler if applicable.
+     *
+     * @param  bool  $value
+     * @return void
+     */
+    public function setExists($value)
+    {
+        if ($this->realHandler instanceof ExistenceAwareInterface) {
+            $this->realHandler->setExists($value);
+        }
+
+        return $this;
     }
 
 }
