@@ -98,8 +98,6 @@ class LockingSessionHandler implements SessionHandlerInterface, ExistenceAwareIn
         if ($this->realHandler instanceof ExistenceAwareInterface) {
             $this->realHandler->setExists($value);
         }
-
-        return $this;
     }
 
 }
