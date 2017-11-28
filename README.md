@@ -42,7 +42,14 @@ In your Laravel app, edit config/app.php and replace the default session handler
     config/app.php:
     - Illuminate\Session\SessionServiceProvider::class,
     + Rairlie\LockingSession\LockingSessionServiceProvider::class,
+    
+By default, lock files are written to the system temp dir, in a subdir 'sessionlocks'. You can specify an alternative path with:
+
+    config/session.php:
+    'lockfile_dir' => '/path/to/my/lockdir'
+
+The directory will be created if it doesn't exist.
 
 ## Requirements
-1. Write access to the system temp dir
+1. Write access to the lock dir
 2. POSIX file system locking e.g. *NIX, Windows (untested).
