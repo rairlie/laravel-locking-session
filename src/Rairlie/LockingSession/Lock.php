@@ -10,22 +10,27 @@ use Log;
 
 class Lock
 {
-
-    protected $lockfilepath;
+    protected $lockfileDir;
     protected $lockfp;
     protected $debug = false;
 
-    const LOCKDIR_NAME = 'sessionlocks';
+    const DEFAULT_LOCKDIR_NAME = 'sessionlocks';
 
     /**
      * Constructor
      *
-     * @param  string  $subject  ID of subject to lock, e.g. session ID
+     * @param  string  $subject      ID of subject to lock, e.g. session ID
+     * @Param  string  $lockfileDir  Path to write the temporary lockfile to
      */
-    public function __construct($subject)
+    public function __construct($subject, $lockfileDir)
     {
+        if ($lockfileDir === null) {
+            $lockfileDir = sys_get_temp_dir() . '/' . self::DEFAULT_LOCKDIR_NAME;
+        }
+
         $lockName = preg_replace('{/}', '_', $subject); // Make safe for filesystem
-        $this->lockfilepath = $this->getLockDir() . $lockName;
+
+        $this->lockfilePath = $lockfileDir . '/' . $lockName;
     }
 
     public function __destruct()
@@ -73,7 +78,7 @@ class Lock
         $this->log('gc');
 
         $files = Finder::create()
-                    ->in($this->getLockDir())
+                    ->in(dirname($this->lockfilePath))
                     ->files()
                     ->ignoreDotFiles(true)
                     ->date('<= now - '.$maxlifetime.' seconds');
@@ -84,20 +89,15 @@ class Lock
         }
     }
 
-    protected function getLockDir()
-    {
-        return sys_get_temp_dir() . '/' . self::LOCKDIR_NAME . '/';
-    }
-
     /**
      * Open the lock file on disk, creating it if it doesn't exist
      */
     protected function openLockFile()
     {
-        if (!is_dir(dirname($this->lockfilepath))) {
-            mkdir(dirname($this->lockfilepath), 0744, true);
+        if (!is_dir(dirname($this->lockfilePath))) {
+            mkdir(dirname($this->lockfilePath), 0744, true);
         }
-        $this->lockfp = fopen($this->lockfilepath, 'w+');
+        $this->lockfp = fopen($this->lockfilePath, 'w+');
     }
 
     /**
@@ -116,7 +116,7 @@ class Lock
      */
     protected function log($message)
     {
-        $this->debug && Log::info($this->lockfilepath . ' ' . getmypid() . ' ' . $message);
+        $this->debug && Log::info($this->lockfilePath . ' ' . getmypid() . ' ' . $message);
     }
 
 }

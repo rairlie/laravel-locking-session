@@ -18,10 +18,18 @@ class SessionManager extends BaseSessionManager
 
         if ($this->app['config']['session.encrypt']) {
             return new EncryptedStore(
-                $this->app['config']['session.cookie'], $handler, $this->app['encrypter']
+                $this->app['config']['session.cookie'],
+                $handler,
+                $this->app['encrypter'],
+                $this->app['config']['session.lockfile_dir']
             );
         } else {
-            return new Store($this->app['config']['session.cookie'], $handler);
+            return new Store(
+                $this->app['config']['session.cookie'],
+                $handler,
+                null,
+                $this->app['config']['session.lockfile_dir']
+            );
         }
     }
 

@@ -11,10 +11,12 @@ class LockingSessionHandler implements SessionHandlerInterface, ExistenceAwareIn
 
     protected $realHandler;
     protected $lock;
+    protected $lockfileDir;
 
-    public function __construct(SessionHandlerInterface $realHandler)
+    public function __construct(SessionHandlerInterface $realHandler, $lockfileDir)
     {
         $this->realHandler = $realHandler;
+        $this->lockfileDir = $lockfileDir;
     }
 
     public function close()
@@ -29,7 +31,7 @@ class LockingSessionHandler implements SessionHandlerInterface, ExistenceAwareIn
 
     public function gc($maxlifetime)
     {
-        $dummy = new Lock('dummy');
+        $dummy = new Lock('dummy', $this->lockfileDir);
         $dummy->gcLockDir($maxlifetime);
 
         return $this->realHandler->gc($maxlifetime);
@@ -76,7 +78,7 @@ class LockingSessionHandler implements SessionHandlerInterface, ExistenceAwareIn
     protected function acquireLock($id)
     {
         if (!$this->lock) {
-            $this->lock = new Lock($id);
+            $this->lock = new Lock($id, $this->lockfileDir);
         }
         $this->lock->acquire();
     }
