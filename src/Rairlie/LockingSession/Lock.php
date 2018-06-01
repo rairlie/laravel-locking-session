@@ -95,7 +95,8 @@ class Lock
     protected function openLockFile()
     {
         if (!is_dir(dirname($this->lockfilePath))) {
-            mkdir(dirname($this->lockfilePath), 0744, true);
+            // Suppress warning on mkdir - may be created by another process
+            @mkdir(dirname($this->lockfilePath), 0744, true);
         }
         $this->lockfp = fopen($this->lockfilePath, 'w+');
     }
