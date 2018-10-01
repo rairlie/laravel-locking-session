@@ -52,4 +52,9 @@ The directory will be created if it doesn't exist.
 
 ## Requirements
 1. Write access to the lock dir
-2. POSIX file system locking e.g. *NIX, Windows (untested).
+2. POSIX file system locking e.g. *NIX, Windows (untested)."
+
+
+## Licence
+MIT Licence. Refer to the [LICENSE](https://github.com/WayneBrummer/laravel-locking-session/blob/master/LICENSE.txt) file to get more info.
+
