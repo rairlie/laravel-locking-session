@@ -56,5 +56,5 @@ The directory will be created if it doesn't exist.
 
 
 ## Licence
-MIT Licence. Refer to the [LICENSE](https://github.com/WayneBrummer/laravel-locking-session/blob/master/LICENSE.txt) file to get more info.
+MIT Licence. Refer to the [LICENSE](https://github.com/rairlie/laravel-locking-session/blob/master/LICENSE.txt) file to get more info.
 
