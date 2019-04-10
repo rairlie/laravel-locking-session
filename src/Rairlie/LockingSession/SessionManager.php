@@ -2,7 +2,8 @@
 namespace Rairlie\LockingSession;
 
 use Illuminate\Session\SessionManager as BaseSessionManager;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler;
+use Illuminate\Session\NullSessionHandler;
+use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler as SymfonyNullHandler;
 
 class SessionManager extends BaseSessionManager
 {
@@ -12,7 +13,7 @@ class SessionManager extends BaseSessionManager
      */
     protected function buildSession($handler)
     {
-        if ($handler instanceOf NullSessionHandler) {
+        if ($handler instanceOf NullSessionHandler || $handler instanceof SymfonyNullHandler) {
             return parent::buildSession($handler);
         }
 
