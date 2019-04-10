@@ -2,12 +2,10 @@
 namespace Rairlie\LockingSession\Middleware;
 
 use Illuminate\Session\Middleware\StartSession as BaseStartSession;
-use Illuminate\Session\NullSessionHandler;
-use Symfony\Component\HttpFoundation\Session\Storage\Handler\NullSessionHandler as SymfonyNullHandler;
+use Rairlie\LockingSession\LockingSessionHandler;
 
 class StartSession extends BaseStartSession
 {
-
     /**
      * Override so we ask the handler if its using cookies (rather than inferring
      * from the class instance)
@@ -20,11 +18,10 @@ class StartSession extends BaseStartSession
 
         $handler = $this->manager->driver()->getHandler();
 
-        if ($handler instanceOf NullSessionHandler || $handler instanceof  SymfonyNullHandler) {
-            return false;
+        if ($handler instanceof LockingSessionHandler) {
+            return $handler->usingCookieSessions();
         }
 
-        return $handler->usingCookieSessions();
+        return parent::usingCookieSessions();
     }
-
 }
