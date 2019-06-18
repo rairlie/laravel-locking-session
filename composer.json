@@ -17,5 +17,8 @@
     "require": {
         "php": ">=5.5.9",
         "illuminate/session": "~5.0"
+    },
+    "require-dev": {
+        "phpunit/phpunit": "^8.0"
     }
 }
