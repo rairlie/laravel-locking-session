@@ -85,7 +85,7 @@ class Lock
 
         foreach ($files as $file) {
             $this->log('gc '. $file->getRealPath());
-            unlink($file->getRealPath());
+            @unlink($file->getRealPath());
         }
     }
 
