@@ -32,17 +32,4 @@ class Store extends BaseStore
             parent::save();
         }
     }
-
-    /**
-     * Load the session data from the handler.
-     *
-     * To more accurately emulate native php when loading the session, existing data should be flushed before loading data from session store.
-     *
-     * @return void
-     */
-    protected function loadSession()
-    {
-        $this->flush();
-        parent::loadSession();
-    }
 }

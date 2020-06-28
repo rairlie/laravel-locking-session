@@ -32,17 +32,4 @@ class EncryptedStore extends BaseEncryptedStore
             parent::save();
         }
     }
-
-    /**
-     * Load the session data from the handler.
-     *
-     * To more accurately emulate native php when loading the session, existing data should not be merged into the loaded data.
-     *
-     * @return void
-     */
-    protected function loadSession()
-    {
-        $this->flush();
-        parent::loadSession();
-    }
 }
