@@ -17,7 +17,7 @@ class SessionManager extends BaseSessionManager
             return parent::buildSession($handler);
         }
 
-        if ($this->app['config']['session.encrypt']) {
+        if ($this->container['config']['session.encrypt']) {
             return new EncryptedStore(
                 $this->container['config']['session.cookie'],
                 $handler,
