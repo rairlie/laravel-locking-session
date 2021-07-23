@@ -10,14 +10,14 @@ class Store extends BaseStore
      * Create a new session instance.
      *
      * @param  string $name
-     * @param  SessionHandlerInterface $handler
+     * @param  SessionHandlerInterface $realHandler
      * @param  string|null $id
      * @param  string|null $lockfileDir
      * @return void
      */
-    public function __construct($name, SessionHandlerInterface $handler, $id = null, $lockfileDir = null)
+    public function __construct($name, $realHandler, $id = null, $lockfileDir = null)
     {
-        $lockingSessionHandler = new LockingSessionHandler($handler, $lockfileDir);
+        $lockingSessionHandler = new LockingSessionHandler($realHandler, $lockfileDir);
 
         parent::__construct($name, $lockingSessionHandler, $id);
     }

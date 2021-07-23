@@ -24,7 +24,6 @@ class SessionManager extends BaseSessionManager
                 $container['config']['session.cookie'],
                 $handler,
                 $container['encrypter'],
-                null,
                 $container['config']['session.lockfile_dir']
             );
         } else {

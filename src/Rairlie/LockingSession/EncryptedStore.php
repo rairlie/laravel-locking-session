@@ -1,9 +1,7 @@
 <?php
 namespace Rairlie\LockingSession;
 
-use Illuminate\Contracts\Encryption\Encrypter as EncrypterContract;
 use Illuminate\Session\EncryptedStore as BaseEncryptedStore;
-use SessionHandlerInterface;
 
 class EncryptedStore extends BaseEncryptedStore
 {
@@ -11,22 +9,16 @@ class EncryptedStore extends BaseEncryptedStore
      * Create a new session instance.
      *
      * @param  string $name
-     * @param  SessionHandlerInterface $handler
-     * @param  EncrypterContract $encrypter
-     * @param  string|null $id
+     * @param  \SessionHandlerInterface $realHandler
+     * @param  \Illuminate\Contracts\Encryption\Encrypter $encrypter
      * @param  string|null $lockfileDir
      * @return void
      */
-    public function __construct(
-        $name,
-        SessionHandlerInterface $handler,
-        EncrypterContract $encrypter,
-        $id = null,
-        $lockfileDir = null
-    ) {
-        $lockingSessionHandler = new LockingSessionHandler($handler, $lockfileDir);
+    public function __construct($name, $realHandler, $encrypter, $lockfileDir = null)
+    {
+        $lockingSessionHandler = new LockingSessionHandler($realHandler, $lockfileDir);
 
-        parent::__construct($name, $lockingSessionHandler, $encrypter, $id);
+        parent::__construct($name, $lockingSessionHandler, $encrypter);
     }
 
     public function handlerNeedsRequest()
