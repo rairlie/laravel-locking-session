@@ -2,15 +2,24 @@
 namespace Rairlie\LockingSession;
 
 use Illuminate\Session\Store as BaseStore;
+use SessionHandlerInterface;
 
 class Store extends BaseStore
 {
-
+    /**
+     * Create a new session instance.
+     *
+     * @param  string $name
+     * @param  SessionHandlerInterface $realHandler
+     * @param  string|null $id
+     * @param  string|null $lockfileDir
+     * @return void
+     */
     public function __construct($name, $realHandler, $id = null, $lockfileDir = null)
     {
         $lockingSessionHandler = new LockingSessionHandler($realHandler, $lockfileDir);
 
-        return parent::__construct($name, $lockingSessionHandler, $id);
+        parent::__construct($name, $lockingSessionHandler, $id);
     }
 
     public function handlerNeedsRequest()
