@@ -36,7 +36,7 @@ Session locking ensures correctness at the cost of effectively serialising concu
 
 ## Installation
     composer require rairlie/laravel-locking-session
-    composer install
+
 In your Laravel app, edit config/app.php and replace the default session handler with the locking one:
 
     config/app.php:
