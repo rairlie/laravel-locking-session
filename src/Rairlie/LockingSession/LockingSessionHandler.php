@@ -19,16 +19,19 @@ class LockingSessionHandler implements SessionHandlerInterface, ExistenceAwareIn
         $this->lockfileDir = $lockfileDir;
     }
 
+    #[\ReturnTypeWillChange]
     public function close()
     {
         return $this->realHandler->close();
     }
 
+    #[\ReturnTypeWillChange]
     public function destroy($session_id)
     {
         return $this->realHandler->destroy($session_id);
     }
 
+    #[\ReturnTypeWillChange]
     public function gc($maxlifetime)
     {
         $dummy = new Lock('dummy', $this->lockfileDir);
@@ -37,11 +40,13 @@ class LockingSessionHandler implements SessionHandlerInterface, ExistenceAwareIn
         return $this->realHandler->gc($maxlifetime);
     }
 
+    #[\ReturnTypeWillChange]
     public function open($save_path, $name)
     {
         return $this->realHandler->open($save_path, $name);
     }
 
+    #[\ReturnTypeWillChange]
     public function read($session_id)
     {
         // Lock the session before reading and hold the lock
@@ -49,6 +54,7 @@ class LockingSessionHandler implements SessionHandlerInterface, ExistenceAwareIn
         return $this->realHandler->read($session_id);
     }
 
+    #[\ReturnTypeWillChange]
     public function write($session_id, $session_data)
     {
         $this->acquireLock($session_id);
