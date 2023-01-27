@@ -53,3 +53,9 @@ The directory will be created if it doesn't exist.
 ## Requirements
 1. Write access to the lock dir
 2. POSIX file system locking e.g. *NIX, Windows (untested).
+
+## Compatibility
+| Laravel Locking Session Version | PHP Version |
+| ------------------------------- | ----------- |
+| 2.x | >=7.4 |
+| 1.x | 5.5 - 8.1 |
