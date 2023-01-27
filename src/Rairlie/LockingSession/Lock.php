@@ -10,7 +10,7 @@ use Log;
 
 class Lock
 {
-    protected $lockfileDir;
+    protected string $lockfilePath;
     protected $lockfp;
     protected $debug = false;
 
