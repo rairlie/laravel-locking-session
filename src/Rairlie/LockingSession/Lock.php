@@ -77,8 +77,14 @@ class Lock
     {
         $this->log('gc');
 
+        $lockfileDir = dirname($this->lockfilePath);
+
+        if (!is_dir($lockfileDir)) {
+            return; // Lock dir doesn't exist - nothing to gc
+        }
+
         $files = Finder::create()
-                    ->in(dirname($this->lockfilePath))
+                    ->in($lockfileDir)
                     ->files()
                     ->ignoreDotFiles(true)
                     ->date('<= now - '.$maxlifetime.' seconds');
